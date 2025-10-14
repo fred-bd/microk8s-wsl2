@@ -1,0 +1,40 @@
+- hosts: cluster
+ 
+  tasks:
+
+  - name: install microk8s
+    shell: snap install microk8s --classic
+
+  - name: add current user to microk8s group 
+    user: 
+      name: '{{ansible_user}}'
+      groups: microk8s
+      append: yes
+
+  - name: grant existence of .kube folder
+    file:
+      path: /home/{{ansible_user}}/.kube
+      state: directory
+
+  - name: generate kubeconfig file
+    shell: microk8s kubectl config view --raw > /home/{{ansible_user}}/.kube/config
+
+  - name: update owner of .kube folder
+    file:
+      path: /home/{{ansible_user}}/.kube
+      state: directory
+      recurse: yes
+      owner: '{{ansible_user}}' 
+      group: '{{ansible_user}}'
+
+  - name: aliasing kubectl
+    shell: snap alias microk8s.kubectl kubectl
+
+  - name: configure coredns
+    shell: microk8s enable dns
+
+  - name: Store locally kubernetes config file
+    fetch:
+      src: /home/{{ansible_user}}/.kube/config
+      dest: ../my-kubeconfig
+      flat: yes

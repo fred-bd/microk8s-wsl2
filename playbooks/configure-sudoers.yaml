@@ -1,0 +1,14 @@
+- hosts: all
+
+  tasks:
+  - name: grep user 
+    shell: cat /etc/sudoers | grep '{{ ansible_user }} ALL=(ALL) NOPASSWD:ALL'
+    register: check_sudoers
+    ignore_errors: true
+
+  - name: if users exist exit playbook
+    meta: end_play
+    when: check_sudoers.stdout != ""   
+
+  - name: add user to sudoers file
+    shell: echo "{{ ansible_user }} ALL=(ALL) NOPASSWD:ALL" | tee -a /etc/sudoers
