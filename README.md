@@ -23,8 +23,8 @@ sudo apt upgrade -y && \
 sudo apt install -y \
 net-tools openssh-server
 
-# Will use tehe ip 80.0.0.1
-sudo ifconfig eth0:0 80.0.0.1
+# Will use the ip 80.0.0.1
+sudo ifconfig eth1:1 80.0.0.2
 
 cp /etc/hosts . && \
 echo "127.0.0.1 wsl-cluster" > hosts && \

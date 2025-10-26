@@ -30,8 +30,10 @@
   - name: aliasing kubectl
     shell: snap alias microk8s.kubectl kubectl
 
-  - name: configure coredns
-    shell: microk8s enable dns
+  - name: configure addons
+    shell: |
+      microk8s enable dns
+      microk8s enable metrics-server
 
   - name: Store locally kubernetes config file
     fetch:
